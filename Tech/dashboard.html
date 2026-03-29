@@ -303,6 +303,10 @@ header h1 {
     height: 130px;
   }
 
+  .track-item video {
+    height: 130px;
+  }
+
   .player-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -328,6 +332,14 @@ header h1 {
   width: 100%;
   height: 140px;
   object-fit: cover;
+}
+
+.track-item video {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .track-item-content {
@@ -535,7 +547,12 @@ function prevTrack() {
 }
 
 window.togglePlayPause = function() {
-  if (!playlist.length) return;
+  if (!playlist.length) {
+    // Si no hay playlist, reproducir un track aleatorio
+    playRandomTrack();
+    return;
+  }
+  
   if (albumAudio.paused) {
     albumAudio.play().catch(err => console.error('Audio play error', err));
     isPlaying = true;
@@ -653,11 +670,11 @@ function renderTrackStore() {
     const trackId = `trackPreview-${index}`;
 
     card.innerHTML = `
+      <video src="${track.video}" autoplay muted loop style="width:100%; height:140px; object-fit:cover; border-radius:8px;"></video>
       <div class="track-item-content">
+        <h4>${track.name}</h4>
         <p>Precio: 1000 USD</p>
-        <video id="${trackId}" src="${track.video}" preload="none" muted loop style="width:100%; border-radius:8px; margin-bottom:10px;"></video>
-        <button onclick="toggleTrackPreview('${trackId}')">▶ Preview</button>
-        <button onclick="buyTrack('${track.name}', '1000')">💳 Comprar</button>
+        <button onclick="buyTrack('${track.name}', '1000')">💳 Ver y Comprar</button>
       </div>
     `;
 
@@ -665,39 +682,17 @@ function renderTrackStore() {
   });
 }
 
-window.toggleTrackPreview = function(trackId) {
-  const index = parseInt(trackId.split('-')[1]);
-  const trackNumber = index + 1;
-  window.location.href = `preview.html?track=${trackNumber}`;
-};
-
-
 window.buyTrack = async function(trackName, price) {
   if (!auth.currentUser) {
     alert('Por favor inicia sesión primero.');
     return;
   }
 
-  try {
-    // Guardar la compra en Firestore
-    const purchaseData = {
-      trackName: trackName,
-      price: parseInt(price),
-      userId: auth.currentUser.uid,
-      userEmail: auth.currentUser.email,
-      userName: auth.currentUser.displayName,
-      purchaseDate: new Date(),
-      status: 'pending'
-    };
-    
-    const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
-    console.log('Purchase saved with ID:', docRef.id);
-    
-    alert(`¡Compra registrada! ${trackName} - $${price}`);
-    window.open('https://checkout.wompi.co/l/VPOS_LBTnN9', '_blank');
-  } catch (error) {
-    console.error('Error saving purchase:', error);
-    alert('Error al procesar la compra. Inténtalo de nuevo. Error: ' + error.message);
+  // Find the track index by name
+  const trackIndex = tracks.findIndex(track => track.name === trackName);
+  if (trackIndex !== -1) {
+    const trackNumber = trackIndex + 1;
+    window.location.href = `preview.html?track=${trackNumber}`;
   }
 };
 

@@ -466,6 +466,7 @@ textarea {
   </div>
   <p>Premium Digital Tracks & Mixing Services</p>
   <div style="display: flex; gap: 10px; align-items: center;">
+    <button id="globalPlayBtn" onclick="toggleGlobalPlay()" style="padding: 12px 20px; background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); color: white; border: 2px solid white; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 1em; transition: all 0.3s ease;">▶ Play</button>
     <a href="https://youtube.com/@jd_co?si=G772SaLLvb_G803V" target="_blank" class="youtube-btn">📺 YouTube</a>
     <button id="loginBtn">🔐 Login with Google</button>
   </div>
@@ -543,6 +544,11 @@ console.log("Analytics:", analytics);
 let isGoogleLoggedIn = false;
 let cartCount = 0;
 
+// Global audio player variables
+let globalAudio = new Audio();
+let currentGlobalTrack = null;
+let isGlobalPlaying = false;
+
 function setBuyButtonsState(enabled) {
   document.querySelectorAll('#tracksContainer button').forEach(btn => {
     btn.disabled = !enabled;
@@ -592,6 +598,62 @@ document.getElementById("loginBtn").onclick = async () => {
     alert("Error en inicio de sesión: " + (error.message || error));
   }
 };
+
+// Global audio player functions
+window.toggleGlobalPlay = function() {
+  const playBtn = document.getElementById('globalPlayBtn');
+  
+  // Pausar todos los videos individuales si están reproduciendo
+  tracks.forEach((_, i) => {
+    const v = document.getElementById(`video-${i}`);
+    if (v && !v.paused) {
+      v.pause();
+      const trackElement = document.querySelector(`#tracksContainer .track:nth-child(${i + 1})`);
+      const thumb1 = trackElement.querySelector('.thumb-1');
+      const thumb2 = trackElement.querySelector('.thumb-2');
+      const icon = trackElement.querySelector('.play-icon');
+      v.style.display = 'none';
+      thumb1.style.display = 'block';
+      thumb2.style.display = 'block';
+      icon.textContent = '▶';
+    }
+  });
+  
+  if (!isGlobalPlaying) {
+    // Si no está reproduciendo, reproducir un track aleatorio
+    playRandomTrack();
+  } else {
+    // Si está reproduciendo, pausar
+    globalAudio.pause();
+    isGlobalPlaying = false;
+    playBtn.textContent = '▶ Play';
+  }
+};
+
+function playRandomTrack() {
+  if (tracks.length === 0) {
+    alert('No hay tracks disponibles');
+    return;
+  }
+  
+  const randomIndex = Math.floor(Math.random() * tracks.length);
+  const track = tracks[randomIndex];
+  
+  globalAudio.src = track.video;
+  globalAudio.play().catch(err => console.error('Audio play error', err));
+  
+  currentGlobalTrack = track;
+  isGlobalPlaying = true;
+  document.getElementById('globalPlayBtn').textContent = '⏸ Pause';
+}
+
+// Event listeners for global audio
+globalAudio.addEventListener('ended', () => {
+  isGlobalPlaying = false;
+  document.getElementById('globalPlayBtn').textContent = '▶ Play';
+  // Auto-play next random track
+  setTimeout(() => playRandomTrack(), 1000);
+});
 
 // 🔐 2FA
 window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -744,6 +806,13 @@ function initializeVideoEventListeners() {
 
 // Función para alternar reproducción
 window.togglePlay = function(index) {
+  // Pausar audio global si está reproduciendo
+  if (isGlobalPlaying) {
+    globalAudio.pause();
+    isGlobalPlaying = false;
+    document.getElementById('globalPlayBtn').textContent = '▶ Play';
+  }
+  
   // Pausar todos los videos antes de proceder
   tracks.forEach((_, i) => {
     const v = document.getElementById(`video-${i}`);
