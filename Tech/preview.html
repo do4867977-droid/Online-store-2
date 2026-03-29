@@ -142,6 +142,57 @@ header h1 {
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 }
 
+.youtube-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.youtube-btn:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.payment-btn {
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.payment-btn:hover {
+  background: linear-gradient(135deg, #00e6ff 0%, #00aadd 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+}
+
+.payment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
 @media (max-width: 768px) {
   header h1 {
     font-size: 2em;
@@ -160,6 +211,8 @@ header h1 {
   }
 }
 </style>
+<!-- Wompi Payment Gateway Script -->
+<script src="https://cdn.wompi.com.co/v1/sdk.js"></script>
 </head>
 
 <body>
@@ -168,9 +221,12 @@ header h1 {
   <source src="fondo 2.mp4" type="video/mp4">
 </video>
 
-<header>
+<header style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Preview</h1>
-  <button class="logout-btn" onclick="logout()">Logout</button>
+  <div style="display: flex; gap: 10px;">
+    <a href="https://youtube.com/@jd_co?si=G772SaLLvb_G803V" target="_blank" class="youtube-btn">📺 YouTube</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 </header>
 
 <div class="preview-container">
@@ -182,6 +238,9 @@ header h1 {
     <source id="videoSource" src="track 01.mp4" type="video/mp4">
     Tu navegador no soporta el elemento de video.
   </video>
+  <button class="payment-btn" id="wompiPayBtn" onclick="initWompiPayment()">
+    💳 Pagar
+  </button>
   <button class="back-btn" onclick="goBack()">← Volver al Dashboard</button>
 </div>
 
@@ -224,6 +283,12 @@ function goBack() {
 async function logout() {
   // Simple logout, redirect to index.html
   window.location.href = 'index.html';
+}
+
+// Wompi Payment Integration
+function initWompiPayment() {
+  // Redirigir a checkout de Wompi
+  window.open('https://checkout.wompi.co/l/VPOS_LBTnN9', '_blank');
 }
 </script>
 

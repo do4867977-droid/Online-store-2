@@ -85,6 +85,12 @@ header h1 {
   border-radius: 6px;
   padding: 8px 10px;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.player-controls button:hover {
+  background: #ff4444;
+  transform: scale(1.05);
 }
 
 .player-next {
@@ -216,6 +222,28 @@ header h1 {
 }
 
 .logout-btn:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.youtube-btn {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.youtube-btn:hover {
   background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
   transform: scale(1.05);
   box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
@@ -362,9 +390,12 @@ header h1 {
   <source src="fondo 2.mp4" type="video/mp4">
 </video>
 
-<header>
+<header style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Dashboard</h1>
-  <button class="logout-btn" onclick="logout()">Logout</button>
+  <div style="display: flex; gap: 10px;">
+    <a href="https://youtube.com/@jd_co?si=G772SaLLvb_G803V" target="_blank" class="youtube-btn">📺 YouTube</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
 </header>
 
 <div class="player-bar">
@@ -375,6 +406,7 @@ header h1 {
     <button id="prevBtn">⏮</button>
     <button id="playPauseBtn">▶</button>
     <button id="nextBtn">⏭</button>
+    <button id="randomBtn" onclick="playRandomTrack()">🎲 Aleatorio</button>
     <span id="playerStatus" style="color:#fff; margin-left:8px;">Detenido</span>
   </div>
   <div class="player-next">
@@ -516,6 +548,15 @@ window.togglePlayPause = function() {
 
 window.playTrackIndex = function(trackIndex) {
   setPlaylist(tracks, trackIndex);
+};
+
+window.playRandomTrack = function() {
+  if (tracks.length === 0) {
+    alert('No hay tracks disponibles');
+    return;
+  }
+  const randomIndex = Math.floor(Math.random() * tracks.length);
+  setPlaylist(tracks, randomIndex);
 };
 
 window.buyAlbum = async function(albumName, price) {
