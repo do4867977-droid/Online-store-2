@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Techno sets</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+#backgroundVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+}
+
+header {
+  background: #000000;
+  padding: 30px;
+  border-bottom: 4px solid #ff0000;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+  letter-spacing: 2px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+header p {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cart-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff0000;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+#loginBtn {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 50%, #ff0000 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+#loginBtn:hover {
+  background: #ff4444;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.section-title {
+  font-size: 2em;
+  margin: 40px 20px 30px;
+  border-bottom: 3px solid #cc0000;
+  padding-bottom: 15px;
+  text-align: center;
+  letter-spacing: 1px;
+  color: #ff4444;
+  text-shadow: 0 0 10px #ff4444;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+#tracksContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  #tracksContainer {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 10px;
+  }
+  
+  .track {
+    padding: 15px;
+  }
+  
+  .track-video {
+    height: 150px;
+  }
+  
+  header h1 {
+    font-size: 2em;
+  }
+  
+  .header-top {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .cart-icon {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #tracksContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .track-video {
+    height: 120px;
+  }
+  
+  .play-icon {
+    font-size: 2em;
+  }
+}
+
+.track {
+  background: linear-gradient(135deg, #000000 0%, #330000 50%, #000000 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 5s ease infinite;
+  border: 2px solid #ff0000;
+  border-radius: 12px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.5s ease-out;
+}
+
+.track::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 0, 0, 0.1);
+  transition: left 0.3s ease;
+}
+
+.track:hover {
+  border-color: #ff4444;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), inset 0 0 30px rgba(255, 0, 0, 0.2);
+  transform: translateY(-10px) scale(1.02);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.track:hover::before {
+  left: 100%;
+}
+
+.track h3 {
+  color: #ff4444;
+  margin-bottom: 12px;
+  font-size: 1.4em;
+  position: relative;
+  z-index: 1;
+}
+
+.track-video {
+  width: 100%;
+  height: 200px;
+  background: #000;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.track-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: none;
+}
+
+.thumb {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.thumb-1 {
+  clip-path: inset(0 50% 0 0);
+}
+
+.thumb-2 {
+  clip-path: inset(0 0 0 50%);
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  color: #ff0000;
+  cursor: pointer;
+  z-index: 3;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 10px #ff0000;
+}
+
+.track:hover .play-icon {
+  color: #ffffff;
+  text-shadow: 0 0 20px #ffffff, 0 0 30px #ff0000;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+audio {
+  display: none;
+}
+
+.track-info {
+  font-size: 0.9em;
+  color: #cccccc;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.price {
+  font-size: 1.8em;
+  color: #ff0000;
+  font-weight: bold;
+  margin: 15px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.track button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.track button:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.track button:active {
+  transform: scale(0.98);
+}
+
+.contact-section {
+  background: linear-gradient(135deg, #000000 0%, #330000 50%, #000000 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 7s ease infinite;
+  margin: 40px 20px;
+  padding: 40px;
+  border: 2px solid #ff0000;
+  border-radius: 12px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+}
+
+.contact-section h2 {
+  color: #ff4444;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  background: #000000;
+  border: 2px solid #ff0000;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: Arial;
+  transition: border-color 0.3s ease;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #666;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #ff0000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-family: Arial;
+}
+
+#contactForm button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+#contactForm button:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+  transform: scale(1.02);
+}
+
+.whatsapp {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.whatsapp:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000; }
+  50% { text-shadow: 0 0 10px #ff4444, 0 0 20px #ff4444, 0 0 30px #ff4444; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+</style>
+</head>
+
+<body>
+
+<video id="backgroundVideo" autoplay loop muted>
+  <source src="fondo1.mp4" type="video/mp4">
+</video>
+
+<header>
+  <div class="header-top">
+    <h1>Techno sets</h1>
+    <div class="cart-icon">
+      🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </div>
+  </div>
+  <p>Premium Digital Tracks & Mixing Services</p>
+  <button id="loginBtn">🔐 Login with Google</button>
+</header>
+
+<h2 class="section-title">🎧 MY EXCLUSIVE TRACKS</h2>
+<div id="tracksContainer"></div>
+
+<div class="contact-section">
+  <h2>📅 HIRING & TECHNO COLLABORATIONS</h2>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Your Email" required>
+    <textarea id="message" placeholder="Tell me about your project..."></textarea>
+    <button type="submit">📨 Send Request</button>
+  </form>
+</div>
+
+<div id="recaptcha-container"></div>
+
+<!-- BOTÓN WHATSAPP -->
+<a href="https://wa.me/573225140412" class="whatsapp" target="_blank">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+  </svg>
+</a>
+
+<!-- EMAILJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  RecaptchaVerifier,
+  PhoneAuthProvider,
+  multiFactor
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
+
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+
+// 🔥 TU FIREBASE CONFIG
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCP2W3s6kvDvlREql-8VSwK65nKx_Enn5k",
+  authDomain: "project-8155574477096226340.firebaseapp.com",
+  projectId: "project-8155574477096226340",
+  storageBucket: "project-8155574477096226340.firebasestorage.app",
+  messagingSenderId: "309038596135",
+  appId: "1:309038596135:web:661020e20e905d60ab0e02",
+  measurementId: "G-D5P8FCDVFK"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const analytics = getAnalytics(app);
+
+console.log("Firebase initialized successfully!");
+console.log("Firestore:", db);
+console.log("Storage:", storage);
+console.log("Analytics:", analytics);
+
+let isGoogleLoggedIn = false;
+let cartCount = 0;
+
+function setBuyButtonsState(enabled) {
+  document.querySelectorAll('#tracksContainer button').forEach(btn => {
+    btn.disabled = !enabled;
+    btn.textContent = enabled ? '🛒 Add to Cart' : '🔒 Login to Buy';
+  });
+}
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    isGoogleLoggedIn = true;
+    setBuyButtonsState(true);
+    document.getElementById("loginBtn").textContent = `✅ ${user.displayName}`;
+    renderTracks(); // Re-render to show all tracks
+    // Redirect to dashboard
+    window.location.href = 'dashboard.html';
+  } else {
+    isGoogleLoggedIn = false;
+    setBuyButtonsState(false);
+    document.getElementById("loginBtn").textContent = "🔐 Login with Google";
+    renderTracks(); // Re-render to show preview tracks
+  }
+});
+
+// LOGIN GOOGLE
+const provider = new GoogleAuthProvider();
+
+document.getElementById("loginBtn").onclick = async () => {
+  try {
+    if (isGoogleLoggedIn) {
+      await signOut(auth);
+      return;
+    }
+
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    isGoogleLoggedIn = true;
+    setBuyButtonsState(true);
+    document.getElementById("loginBtn").textContent = `✅ Logged in: ${user.displayName}`;
+
+    alert("Welcome " + user.displayName);
+
+    enable2FA(user);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error en inicio de sesión: " + (error.message || error));
+  }
+};
+
+// 🔐 2FA
+window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+  size: 'normal'
+});
+
+async function enable2FA(user) {
+  const phone = prompt("Enter phone +573... (optional for 2FA)");
+  if(phone) {
+    const provider = new PhoneAuthProvider(auth);
+
+    const verificationId = await provider.verifyPhoneNumber({
+      phoneNumber: phone,
+      session: await multiFactor(user).getSession()
+    }, window.recaptchaVerifier);
+
+    const code = prompt("Enter SMS code");
+
+    const cred = PhoneAuthProvider.credential(verificationId, code);
+
+    await multiFactor(user).enroll(cred, "phone");
+
+    alert("2FA activated 🔐");
+  }
+}
+
+
+// � TRACKS CON VIDEOS (01 a 21)
+const tracks = [];
+let tracksLoaded = false;
+
+async function loadTracksFromFirestore() {
+  try {
+    console.log("Loading tracks from Firestore...");
+    const tracksCollection = collection(db, 'tracks');
+    const tracksSnapshot = await getDocs(tracksCollection);
+    
+    if (tracksSnapshot.empty) {
+      console.log("No tracks found in Firestore, initializing...");
+      // Si no hay tracks en Firestore, inicializar con datos locales
+      await initializeTracksInFirestore();
+      return loadTracksFromFirestore(); // Recargar después de inicializar
+    }
+    
+    tracks.length = 0; // Limpiar array
+    tracksSnapshot.forEach((doc) => {
+      tracks.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Sort tracks by name
+    tracks.sort((a, b) => a.name.localeCompare(b.name));
+    
+    console.log(`Loaded ${tracks.length} tracks from Firestore`);
+    tracksLoaded = true;
+    renderTracks();
+  } catch (error) {
+    console.error("Error loading tracks from Firestore:", error);
+    // Fallback a tracks locales si hay error
+    console.log("Falling back to local tracks...");
+    initializeLocalTracks();
+    renderTracks();
+  }
+}
+
+async function initializeTracksInFirestore() {
+  const tracksCollection = collection(db, 'tracks');
+  
+  for (let i = 1; i <= 21; i++) {
+    const trackData = {
+      name: `Track ${i.toString().padStart(2, '0')}`,
+      video: `track ${i.toString().padStart(2, '0')}.mp4`,
+      price: 1000,
+      thumbnail: i % 2 === 0 ? "2.jpeg" : "1.jpeg",
+      createdAt: new Date()
+    };
+    
+    await addDoc(tracksCollection, trackData);
+  }
+}
+
+function initializeLocalTracks() {
+  tracks.length = 0;
+  for (let i = 1; i <= 21; i++) {
+    tracks.push({
+      name: `Track ${i.toString().padStart(2, '0')}`,
+      video: `track ${i.toString().padStart(2, '0')}.mp4`,
+      price: 1000,
+      thumbnail: i % 2 === 0 ? "2.jpeg" : "1.jpeg"
+    });
+  }
+  // Sort tracks by name
+  tracks.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function renderTracks() {
+  const container = document.getElementById("tracksContainer");
+  container.innerHTML = ''; // Limpiar contenedor
+  
+  let tracksToShow;
+  if (isGoogleLoggedIn) {
+    tracksToShow = tracks;
+  } else {
+    tracksToShow = tracks.slice(6, 7).concat(tracks.slice(11, 12));
+  }
+  
+  tracksToShow.forEach((track, index) => {
+    const div = document.createElement("div");
+    div.className = "track";
+
+    const thumbSrc = track.thumbnail || (index % 2 === 0 ? "1.jpeg" : "2.jpeg");
+
+    div.innerHTML = `
+      <div class="track-video" onclick="togglePlay(${index})">
+        <img class="thumb thumb-1" src="${thumbSrc}" alt="${track.name} Thumb 1">
+        <img class="thumb thumb-2" src="${thumbSrc}" alt="${track.name} Thumb 2">
+        <video id="video-${index}" src="${track.video}" loop preload="none"></video>
+        <span class="play-icon">▶</span>
+      </div>
+      <h3>${track.name}</h3>
+      <div class="price">$${track.price || 1000}</div>
+      <button id="buyBtn-${index}" onclick="buyTrack('${track.name}', '${track.price || 1000}')" disabled>🔒 Login to Buy</button>
+    `;
+
+    container.appendChild(div);
+  });
+
+  setBuyButtonsState(isGoogleLoggedIn);
+  
+  // Re-inicializar event listeners para videos
+  initializeVideoEventListeners();
+}
+
+function initializeVideoEventListeners() {
+  tracks.forEach((track, index) => {
+    const video = document.getElementById(`video-${index}`);
+    if (video) {
+      const thumb1 = document.querySelector(`#tracksContainer .track:nth-child(${index + 1}) .thumb-1`);
+      const thumb2 = document.querySelector(`#tracksContainer .track:nth-child(${index + 1}) .thumb-2`);
+      const icon = document.querySelector(`#tracksContainer .track:nth-child(${index + 1}) .play-icon`);
+      
+      video.addEventListener('ended', () => {
+        video.style.display = 'none';
+        if (thumb1) thumb1.style.display = 'block';
+        if (thumb2) thumb2.style.display = 'block';
+        if (icon) icon.textContent = '▶';
+      });
+    }
+  });
+}
+
+// Función para alternar reproducción
+window.togglePlay = function(index) {
+  // Pausar todos los videos antes de proceder
+  tracks.forEach((_, i) => {
+    const v = document.getElementById(`video-${i}`);
+    if (v && !v.paused) {
+      v.pause();
+      const trackElement = document.querySelector(`#tracksContainer .track:nth-child(${i + 1})`);
+      const thumb1 = trackElement.querySelector('.thumb-1');
+      const thumb2 = trackElement.querySelector('.thumb-2');
+      const icon = trackElement.querySelector('.play-icon');
+      v.style.display = 'none';
+      thumb1.style.display = 'block';
+      thumb2.style.display = 'block';
+      icon.textContent = '▶';
+    }
+  });
+
+  const video = document.getElementById(`video-${index}`);
+  const trackElement = document.querySelector(`#tracksContainer .track:nth-child(${index + 1})`);
+  const thumb1 = trackElement.querySelector('.thumb-1');
+  const thumb2 = trackElement.querySelector('.thumb-2');
+  const icon = trackElement.querySelector('.play-icon');
+  
+  if (video.style.display === 'none' || video.style.display === '') {
+    thumb1.style.display = 'none';
+    thumb2.style.display = 'none';
+    video.style.display = 'block';
+    video.play();
+    icon.textContent = '⏸';
+  } else {
+    if (video.paused) {
+      video.play();
+      icon.textContent = '⏸';
+    } else {
+      video.pause();
+      icon.textContent = '▶';
+      thumb1.style.display = 'block';
+      thumb2.style.display = 'block';
+    }
+  }
+};
+
+// Inicializar tracks desde Firestore
+// loadTracksFromFirestore();
+initializeLocalTracks();
+renderTracks();
+
+// 💳 CARRITO & WOMPI
+window.buyTrack = async function(trackName, price) {
+  if (!isGoogleLoggedIn) {
+    alert('Por favor inicia sesión con Google antes de comprar.');
+    return;
+  }
+
+  try {
+    // Guardar la compra en Firestore
+    const priceValue = parseInt(price.toString().replace('$', '').replace(',', ''));
+    const purchaseData = {
+      trackName: trackName,
+      price: priceValue,
+      userId: auth.currentUser.uid,
+      userEmail: auth.currentUser.email,
+      userName: auth.currentUser.displayName,
+      purchaseDate: new Date(),
+      status: 'pending'
+    };
+
+    const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
+    console.log('Purchase saved with ID:', docRef.id);
+
+    cartCount++;
+    document.getElementById("cartCount").textContent = cartCount;
+    
+    // Animación
+    const cartIcon = document.querySelector(".cart-icon");
+    cartIcon.style.transform = "scale(1.3)";
+    setTimeout(() => {
+      cartIcon.style.transform = "scale(1)";
+    }, 200);
+
+    alert(`¡Compra registrada! ${trackName} - $${price}`);
+    window.open("https://checkout.wompi.co/l/VPOS_LBTnN9", "_blank");
+  } catch (error) {
+    console.error("Error saving purchase:", error);
+    alert("Error al procesar la compra. Inténtalo de nuevo. Error: " + error.message);
+  }
+};
+
+// 📧 EMAILJS INIT
+(function(){
+  emailjs.init("vX0t-GXtKalnU0ZY1");
+})();
+
+// 📩 FORMULARIO AUTO-REPLY
+document.getElementById("contactForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+
+  try {
+    // Guardar en Firestore
+    await addDoc(collection(db, 'contacts'), {
+      name: name,
+      email: email,
+      message: message,
+      submittedAt: new Date(),
+      status: 'unread'
+    });
+
+    // Enviar email
+    await emailjs.send("service_kxheek8", "template_ihmxb2o", {
+      user_name: name,
+      user_email: email,
+      message: message
+    });
+
+    alert("Request sent successfully 🚀");
+    
+    // Limpiar formulario
+    document.getElementById("contactForm").reset();
+  } catch (error) {
+    console.error("Error sending contact form:", error);
+    alert("Error sending email. Please try again. Details: " + error.message);
+  }
+});
+
+</script>
+
+</body>
+</html>

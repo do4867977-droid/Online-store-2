@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - Techno Sets</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+#backgroundVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  pointer-events: none;
+}
+
+
+header {
+  background: #000000;
+  padding: 30px;
+  border-bottom: 4px solid #ff0000;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+  letter-spacing: 2px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.player-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.85);
+  border-bottom: 1px solid #ff0000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 12px;
+}
+
+.player-left h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin: 0;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-controls button {
+  background: #ff0000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.player-next {
+  flex: 1;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.player-next ul {
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.player-next li {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid #ff4444;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 22px;
+  max-width: 1480px;
+  margin: 20px auto;
+  padding: 0 18px 40px;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.album-section, .track-section, .contact-section {
+  background: rgba(0,0,0,0.52);
+  border: 2px solid #ff0000;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.album-section h2, .track-store-header h2, .contact-section h2 {
+  color: #ff4444;
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+
+.track-store-header p {
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-form input,
+.contact-form textarea,
+.contact-form button {
+  padding: 10px;
+  border: 2px solid #ff0000;
+  border-radius: 8px;
+  background: #000;
+  color: #fff;
+}
+
+.contact-form textarea {
+  min-height: 100px;
+}
+
+.contact-form button {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.track-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    margin: 18px auto;
+  }
+
+  .track-store {
+    padding-top: 0;
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .player-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .player-next {
+    width: 100%;
+  }
+
+  .albums-grid, #allTracksGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+.logout-btn {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 50%, #ff0000 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  color: white;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+}
+
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 30px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.track-store {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  padding: 30px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.track-item {
+  background: rgba(0,0,0,0.62);
+  border: 2px solid #ff0000;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(255,0,0,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (max-width: 1024px) {
+  .track-store {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 25px 15px;
+  }
+
+  .track-item-content h4 {
+    font-size: 1rem;
+  }
+
+  .track-item-content p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-store {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 20px 10px;
+  }
+
+  .track-item img {
+    height: 130px;
+  }
+
+  .player-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .player-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .player-next {
+    width: 100%;
+  }
+}
+
+
+.track-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(255,0,0,0.6);
+}
+
+.track-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.track-item-content {
+  padding: 12px;
+}
+
+.track-item-content h4 {
+  color: #fff;
+  margin: 0 0 8px 0;
+}
+
+.track-item-content p {
+  color: #ccc;
+  margin: 6px 0;
+}
+
+.track-item-content button {
+  width: 100%;
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.track-item-content button:hover {
+  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000; }
+  50% { text-shadow: 0 0 10px #ff4444, 0 0 20px #ff4444, 0 0 30px #ff4444; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2em;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<video id="backgroundVideo" autoplay loop muted>
+  <source src="fondo 2.mp4" type="video/mp4">
+</video>
+
+<header>
+  <h1>Dashboard</h1>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="player-bar">
+  <div class="player-left">
+    <h3 id="playerTitle">Reproductor actual: Ninguno</h3>
+  </div>
+  <div class="player-controls">
+    <button id="prevBtn">⏮</button>
+    <button id="playPauseBtn">▶</button>
+    <button id="nextBtn">⏭</button>
+    <span id="playerStatus" style="color:#fff; margin-left:8px;">Detenido</span>
+  </div>
+  <div class="player-next">
+    <strong>Siguiente:</strong>
+    <ul id="nextList"></ul>
+  </div>
+</div>
+
+<main class="dashboard-grid">
+  <aside class="sidebar">
+    <section class="contact-section">
+      <h2>📅 CONTACTO</h2>
+      <form id="contactForm" class="contact-form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Tell me about your project..." required></textarea>
+        <button type="submit">📩 Send Request</button>
+      </form>
+    </section>
+  </aside>
+
+  <section class="track-section">
+    <div class="track-store-header">
+      <h2>Techno Tracks Store (01-21)</h2>
+      <p>Haz clic en cualquier track para vista previa y compra.</p>
+    </div>
+    <section class="track-store" id="trackStore"></section>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<!-- FIREBASE -->
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  RecaptchaVerifier,
+  PhoneAuthProvider,
+  multiFactor
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+// 🔥 TU FIREBASE CONFIG
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCP2W3s6kvDvlREql-8VSwK65nKx_Enn5k",
+  authDomain: "project-8155574477096226340.firebaseapp.com",
+  projectId: "project-8155574477096226340",
+  storageBucket: "project-8155574477096226340.firebasestorage.app",
+  messagingSenderId: "309038596135",
+  appId: "1:309038596135:web:661020e20e905d60ab0e02",
+  measurementId: "G-D5P8FCDVFK"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let tracks = [];
+
+const albumAudio = new Audio();
+let playlist = [];
+let currentPlaylistIndex = 0;
+let isPlaying = false;
+
+function updatePlayerUI() {
+  const track = playlist[currentPlaylistIndex];
+  const playerTitle = document.getElementById('playerTitle');
+  const playerStatus = document.getElementById('playerStatus');
+  const nextList = document.getElementById('nextList');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+
+  if (!track) {
+    playerTitle.textContent = 'Reproductor actual: Ninguno';
+    playerStatus.textContent = 'Detenido';
+    nextList.innerHTML = '';
+    playPauseBtn.textContent = '▶';
+    return;
+  }
+
+  playerTitle.textContent = `Reproductor actual: ${track.name}`;
+  playerStatus.textContent = isPlaying ? 'Reproduciendo' : 'Pausado';
+  playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+
+  const nextTracks = playlist.slice(currentPlaylistIndex + 1, currentPlaylistIndex + 5);
+  nextList.innerHTML = nextTracks.map(nt => `<li>${nt.name}</li>`).join('');
+}
+
+function setMutingByViewport() {
+  albumAudio.muted = window.innerWidth <= 768;
+}
+
+function setPlaylist(tracksArray, startIndex = 0) {
+  playlist = tracksArray;
+  currentPlaylistIndex = startIndex;
+  playCurrentTrack();
+}
+
+function playCurrentTrack() {
+  const current = playlist[currentPlaylistIndex];
+  if (!current) return;
+  albumAudio.src = current.video;
+  albumAudio.play().catch(err => console.error('Audio play error', err));
+  isPlaying = true;
+  updatePlayerUI();
+}
+
+function nextTrack() {
+  if (currentPlaylistIndex + 1 < playlist.length) {
+    currentPlaylistIndex += 1;
+    playCurrentTrack();
+  }
+}
+
+function prevTrack() {
+  if (currentPlaylistIndex > 0) {
+    currentPlaylistIndex -= 1;
+    playCurrentTrack();
+  }
+}
+
+window.togglePlayPause = function() {
+  if (!playlist.length) return;
+  if (albumAudio.paused) {
+    albumAudio.play().catch(err => console.error('Audio play error', err));
+    isPlaying = true;
+  } else {
+    albumAudio.pause();
+    isPlaying = false;
+  }
+  updatePlayerUI();
+};
+
+window.playTrackIndex = function(trackIndex) {
+  setPlaylist(tracks, trackIndex);
+};
+
+window.buyAlbum = async function(albumName, price) {
+  if (!auth.currentUser) {
+    alert('Por favor inicia sesión primero.');
+    return;
+  }
+  try {
+    const purchaseData = {
+      albumName: albumName,
+      price: parseInt(price),
+      userId: auth.currentUser.uid,
+      userEmail: auth.currentUser.email,
+      userName: auth.currentUser.displayName,
+      purchaseDate: new Date(),
+      status: 'pending'
+    };
+
+    await addDoc(collection(db, 'purchases'), purchaseData);
+
+    alert(`¡Compra registrada! ${albumName} - $${price}`);
+    window.open('https://checkout.wompi.co/l/VPOS_LBTnN9', '_blank');
+  } catch (error) {
+    console.error('Error saving purchase:', error);
+    alert('Error al procesar la compra. Inténtalo de nuevo.');
+  }
+};
+
+// Al seleccionar un álbum, se ejecuta playAlbum definido más arriba y se construye la playlist.
+function setupContactForm() {
+  if (!window.emailjs) return;
+  emailjs.init('vX0t-GXtKalnU0ZY1');
+
+  const contactForm = document.getElementById('contactForm');
+  if (!contactForm) return;
+
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    try {
+      await addDoc(collection(db, 'contacts'), {
+        name, email, message,
+        submittedAt: new Date(),
+        status: 'unread'
+      });
+
+      await emailjs.send('service_kxheek8', 'template_ihmxb2o', {
+        user_name: name,
+        user_email: email,
+        message: message
+      });
+
+      alert('Request sent successfully 🚀');
+      contactForm.reset();
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      alert('Error sending email. Please try again. Details: ' + error.message);
+    }
+  });
+}
+
+function initializeLocalTracks() {
+  tracks.length = 0;
+  for (let i = 1; i <= 21; i++) {
+    if (i === 14) continue; // Skip track 14 as file doesn't exist
+    tracks.push({
+      name: `Track ${i.toString().padStart(2, '0')}`,
+      video: `track ${i.toString().padStart(2, '0')}.mp4`,
+      price: 1000,
+      thumbnail: i % 2 === 0 ? "2.jpeg" : "1.jpeg"
+    });
+  }
+  // Sort tracks by name
+  tracks.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function renderAlbums() {
+  renderTrackStore();
+}
+
+function renderTrackStore() {
+  const store = document.getElementById('trackStore');
+  if (!store) return;
+  store.innerHTML = '';
+
+  tracks.forEach((track, index) => {
+    const card = document.createElement('div');
+    card.className = 'track-item';
+    const thumb = track.thumbnail ? track.thumbnail.replace('.jpeg', '.jpg') : '1.jpg';
+    const trackId = `trackPreview-${index}`;
+
+    card.innerHTML = `
+      <div class="track-item-content">
+        <p>Precio: 1000 USD</p>
+        <video id="${trackId}" src="${track.video}" preload="none" muted loop style="width:100%; border-radius:8px; margin-bottom:10px;"></video>
+        <button onclick="toggleTrackPreview('${trackId}')">▶ Preview</button>
+        <button onclick="buyTrack('${track.name}', '1000')">💳 Comprar</button>
+      </div>
+    `;
+
+    store.appendChild(card);
+  });
+}
+
+window.toggleTrackPreview = function(trackId) {
+  const index = parseInt(trackId.split('-')[1]);
+  const trackNumber = index + 1;
+  window.location.href = `preview.html?track=${trackNumber}`;
+};
+
+
+window.buyTrack = async function(trackName, price) {
+  if (!auth.currentUser) {
+    alert('Por favor inicia sesión primero.');
+    return;
+  }
+
+  try {
+    // Guardar la compra en Firestore
+    const purchaseData = {
+      trackName: trackName,
+      price: parseInt(price),
+      userId: auth.currentUser.uid,
+      userEmail: auth.currentUser.email,
+      userName: auth.currentUser.displayName,
+      purchaseDate: new Date(),
+      status: 'pending'
+    };
+    
+    const docRef = await addDoc(collection(db, 'purchases'), purchaseData);
+    console.log('Purchase saved with ID:', docRef.id);
+    
+    alert(`¡Compra registrada! ${trackName} - $${price}`);
+    window.open('https://checkout.wompi.co/l/VPOS_LBTnN9', '_blank');
+  } catch (error) {
+    console.error('Error saving purchase:', error);
+    alert('Error al procesar la compra. Inténtalo de nuevo. Error: ' + error.message);
+  }
+};
+
+window.playTrack = function(src, name) {
+  albumAudio.src = src;
+  albumAudio.loop = true;
+  albumAudio.play().catch(err => console.error('Audio play error', err));
+  alert(`Reproduciendo ${name}`);
+};
+
+window.logout = async function() {
+  try {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  } catch (error) {
+    console.error("Error logging out:", error);
+    alert('Error al cerrar sesión. Inténtalo de nuevo.');
+  }
+};
+
+// Inicializar tracks desde Firestore
+// loadTracksFromFirestore();
+initializeLocalTracks();
+renderAlbums();
+setupContactForm();
+
+setMutingByViewport();
+window.addEventListener('resize', setMutingByViewport);
+
+albumAudio.addEventListener('ended', nextTrack);
+albumAudio.addEventListener('play', () => { isPlaying = true; updatePlayerUI(); });
+albumAudio.addEventListener('pause', () => { isPlaying = false; updatePlayerUI(); });
+
+const prevBtn = document.getElementById('prevBtn');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const nextBtn = document.getElementById('nextBtn');
+if (prevBtn) prevBtn.addEventListener('click', prevTrack);
+if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+if (nextBtn) nextBtn.addEventListener('click', nextTrack);
+
+updatePlayerUI();
+
+// 📧 EMAILJS INIT
+(function(){
+  if (window.emailjs) {
+    emailjs.init('vX0t-GXtKalnU0ZY1');
+  }
+})();
+
+// 📩 CONTACT FORM HANDLER
+const contactFormElement = document.getElementById('contactForm');
+if (contactFormElement) {
+  contactFormElement.addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    try {
+      // Guardar en Firestore
+      await addDoc(collection(db, 'contacts'), {
+        name: name,
+        email: email,
+        message: message,
+        submittedAt: new Date(),
+        status: 'unread'
+      });
+
+      // Enviar email
+      if (window.emailjs) {
+        await emailjs.send('service_kxheek8', 'template_ihmxb2o', {
+          user_name: name,
+          user_email: email,
+          message: message
+        });
+      }
+
+      alert('Request sent successfully 🚀');
+      
+      // Limpiar formulario
+      contactFormElement.reset();
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      alert('Error sending email. Please try again. Details: ' + error.message);
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
