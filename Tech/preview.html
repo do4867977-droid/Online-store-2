@@ -2,293 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Preview - Techno Track</title>
+<title>Preview</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+body{
+  margin:0;
+  background:black;
+  color:white;
+  text-align:center;
+  font-family:Arial;
 }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  color: #ffffff;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+/* glitch */
+h1{
+  color:red;
+  animation:glitch 1s infinite;
 }
 
-#backgroundVideo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-  pointer-events: none;
+@keyframes glitch{
+  0%{text-shadow:2px 0 red}
+  50%{text-shadow:-2px 0 cyan}
+  100%{text-shadow:2px 0 red}
 }
 
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+video{
+  width:80%;
+  margin-top:30px;
+  border:2px solid red;
 }
 
-header {
-  background: rgba(0, 0, 0, 0.85);
-  padding: 20px;
-  border-bottom: 4px solid #ff0000;
-  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10;
-  position: relative;
-}
-
-header h1 {
-  font-size: 2.5em;
-  color: #ff0000;
-  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
-  letter-spacing: 2px;
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-.logout-btn {
-  padding: 12px 25px;
-  background: linear-gradient(135deg, #ff0000 0%, #cc0000 50%, #ff0000 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
-  color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1em;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-}
-
-@keyframes glow {
-  0%, 100% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000; }
-  50% { text-shadow: 0 0 10px #ff4444, 0 0 20px #ff4444, 0 0 30px #ff4444; }
-}
-
-.preview-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  z-index: 1;
-  position: relative;
-}
-
-.preview-video {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-  margin-bottom: 20px;
-}
-
-.track-info {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.track-info h2 {
-  color: #ff4444;
-  font-size: 2em;
-  margin-bottom: 10px;
-  text-shadow: 0 0 10px #ff4444;
-}
-
-.track-info p {
-  color: #ccc;
-  font-size: 1.2em;
-}
-
-.back-btn {
-  padding: 15px 30px;
-  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-}
-
-.youtube-btn {
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
-  color: white;
-  border: 2px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1em;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.youtube-btn:hover {
-  background: linear-gradient(135deg, #ff4444 0%, #ff0000 100%);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-}
-
-.payment-btn {
-  padding: 15px 30px;
-  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.payment-btn:hover {
-  background: linear-gradient(135deg, #00e6ff 0%, #00aadd 100%);
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-}
-
-.payment-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: scale(1);
-}
-
-@media (max-width: 768px) {
-  header h1 {
-    font-size: 2em;
-  }
-
-  .preview-video {
-    max-width: 90%;
-  }
-
-  .track-info h2 {
-    font-size: 1.5em;
-  }
-
-  .track-info p {
-    font-size: 1em;
-  }
+button{
+  padding:15px;
+  background:red;
+  border:none;
+  color:white;
+  margin-top:20px;
+  cursor:pointer;
 }
 </style>
-<!-- Wompi Payment Gateway Script -->
-<script src="https://cdn.wompi.com.co/v1/sdk.js"></script>
 </head>
 
 <body>
 
-<video id="backgroundVideo" autoplay loop muted>
-  <source src="fondo 2.mp4" type="video/mp4">
-</video>
+<h1>TECHNO TRACK</h1>
 
-<header style="display: flex; justify-content: space-between; align-items: center;">
-  <h1>Preview</h1>
-  <div style="display: flex; gap: 10px;">
-    <a href="https://youtube.com/@jd_co?si=G772SaLLvb_G803V" target="_blank" class="youtube-btn">📺 YouTube</a>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-</header>
+<video src="techno2.mp4" controls autoplay loop></video>
 
-<div class="preview-container">
-  <div class="track-info">
-    <h2 id="trackTitle">Track 01</h2>
-    <p id="trackPrice">Precio: 1000 USD</p>
-  </div>
-  <video id="previewVideo" class="preview-video" controls autoplay loop>
-    <source id="videoSource" src="track 01.mp4" type="video/mp4">
-    Tu navegador no soporta el elemento de video.
-  </video>
-  <button class="payment-btn" id="wompiPayBtn" onclick="initWompiPayment()">
-    💳 Pagar
-  </button>
-  <button class="back-btn" onclick="goBack()">← Volver al Dashboard</button>
-</div>
+<br>
+<button onclick="pay()">PAY 1000 EUR</button>
 
 <script>
-// Función para obtener parámetros de la URL
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
-}
-
-// Tracks data (same as dashboard)
-const tracks = [];
-for (let i = 1; i <= 21; i++) {
-  if (i === 14) continue; // Skip track 14 as file doesn't exist
-  tracks.push({
-    name: `Track ${i.toString().padStart(2, '0')}`,
-    video: `track ${i.toString().padStart(2, '0')}.mp4`,
-    price: 1000
-  });
-}
-
-// Load track based on URL param
-const trackParam = getQueryParam('track');
-if (trackParam) {
-  const trackIndex = parseInt(trackParam) - 1; // Assuming track=1 for Track 01
-  if (tracks[trackIndex]) {
-    const track = tracks[trackIndex];
-    document.getElementById('trackTitle').textContent = track.name;
-    document.getElementById('trackPrice').textContent = `Precio: ${track.price} USD`;
-    document.getElementById('videoSource').src = track.video;
-    document.getElementById('previewVideo').load();
-    document.getElementById('previewVideo').play().catch(err => console.error('Video play error', err));
-  }
-}
-
-function goBack() {
-  window.location.href = 'dashboard.html';
-}
-
-async function logout() {
-  // Simple logout, redirect to index.html
-  window.location.href = 'index.html';
-}
-
-// Wompi Payment Integration
-function initWompiPayment() {
-  // Redirigir a checkout de Wompi
-  window.open('https://checkout.wompi.co/l/VPOS_LBTnN9', '_blank');
+function pay(){
+  window.open("https://checkout.wompi.co/l/VPOS_LBTnN9");
 }
 </script>
 
